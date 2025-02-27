@@ -27,6 +27,13 @@ class _MainscreenState extends State<Mainscreen> {
   }
 
   @override
+  void initState() {
+    loadData();
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -42,38 +49,35 @@ class _MainscreenState extends State<Mainscreen> {
       ),
       body: Column(
         children: [
-          listData.isNotEmpty
-              ? Expanded(
-                  child: ListView.builder(
-                      itemCount: listData.length,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: ListTile(
-                              onTap: () {
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) {
-                                  return Viewscreen(
-                                    title: listData[index]['name'],
-                                    image: listData[index]['image'],
-                                    price: listData[index]['price'].toString(),
-                                    description: listData[index]['description'],
-                                  );
-                                }));
-                              },
-                              leading: CircleAvatar(
-                                radius: 25,
-                                backgroundImage:
-                                    AssetImage(listData[index]['image']),
-                                // NetworkImage(listData[index]['image']),
-                              ),
-                              title: Text(listData[index]['name']),
-                              trailing:
-                                  Text(listData[index]['price'].toString())),
-                        );
-                      }),
-                )
-              : ElevatedButton(onPressed: loadData, child: Text("load data"))
+          Expanded(
+            child: ListView.builder(
+                itemCount: listData.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ListTile(
+                        onTap: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return Viewscreen(
+                              title: listData[index]['name'],
+                              image: listData[index]['image'],
+                              price: listData[index]['price'].toString(),
+                              description: listData[index]['description'],
+                            );
+                          }));
+                        },
+                        leading: CircleAvatar(
+                          radius: 25,
+                          backgroundImage: AssetImage(listData[index]['image']),
+                          // NetworkImage(listData[index]['image']),
+                        ),
+                        title: Text(listData[index]['name']),
+                        trailing: Text(listData[index]['price'].toString())),
+                  );
+                }),
+          )
+          //: ElevatedButton(onPressed: loadData, child: Text("load data"))
         ],
       ),
     );

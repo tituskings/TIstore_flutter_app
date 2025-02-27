@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ti_store_app/screens/mainscreen.dart';
+import 'package:ti_store_app/screens/main_screen.dart';
 
 void main() {
   runApp(MyApp());
