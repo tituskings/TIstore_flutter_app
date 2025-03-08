@@ -1,38 +1,16 @@
 import 'package:flutter/material.dart';
-import 'dart:convert';
+import 'package:ti_store_app/data/model.dart';
+import 'package:ti_store_app/screens/shopping_cart_screen.dart';
+import 'package:ti_store_app/screens/show_bottom_screen.dart';
 
-import 'package:flutter/services.dart';
-import 'package:ti_store_app/screens/view_screen.dart';
-
-class Mainscreen extends StatefulWidget {
-  const Mainscreen({super.key});
+class MainScreen extends StatefulWidget {
+  const MainScreen({super.key});
 
   @override
-  State<Mainscreen> createState() => _MainscreenState();
+  State<MainScreen> createState() => _MainScreenState();
 }
 
-class _MainscreenState extends State<Mainscreen> {
-  List<dynamic> listData = [];
-
-  Future<void> loadData() async {
-    final String jsonData =
-        await rootBundle.loadString('assets/localData.json');
-
-    final localData = jsonDecode(jsonData);
-
-    listData = localData["items"];
-
-    //print("number of item ${listData.length}");
-    setState(() {});
-  }
-
-  @override
-  void initState() {
-    loadData();
-    // TODO: implement initState
-    super.initState();
-  }
-
+class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,34 +24,43 @@ class _MainscreenState extends State<Mainscreen> {
             Icon(Icons.shopping_bag)
           ],
         ),
+        actions: [
+          InkWell(
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return ShoppingCartScreen();
+                }));
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Icon(Icons.add_shopping_cart_outlined),
+              ))
+        ],
       ),
       body: Column(
         children: [
           Expanded(
             child: ListView.builder(
-                itemCount: listData.length,
+                itemCount: itemData.length,
                 itemBuilder: (context, index) {
+                  final newData = itemData[index];
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: ListTile(
                         onTap: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                            return Viewscreen(
-                              title: listData[index]['name'],
-                              image: listData[index]['image'],
-                              price: listData[index]['price'].toString(),
-                              description: listData[index]['description'],
-                            );
-                          }));
+                          showModalBottomSheet(
+                              context: context,
+                              builder: (context) {
+                                return ShowBottomScreen(newData: newData);
+                              });
                         },
                         leading: CircleAvatar(
                           radius: 25,
-                          backgroundImage: AssetImage(listData[index]['image']),
+                          backgroundImage: AssetImage(newData.image),
                           // NetworkImage(listData[index]['image']),
                         ),
-                        title: Text(listData[index]['name']),
-                        trailing: Text(listData[index]['price'].toString())),
+                        title: Text(newData.name),
+                        trailing: Text('\$${newData.price.toString()}')),
                   );
                 }),
           )
